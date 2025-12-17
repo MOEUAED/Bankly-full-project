@@ -15,13 +15,13 @@ Bankly V2 est une application interne moderne pour simplifier les opérations qu
 - [User Stories](#user-stories)  
 - [Technologies](#technologies)  
 - [Fonctionnalités bonus](#fonctionnalités-bonus)  
-- [Auteur](#auteur)  
+- [Auteur](#auteur) 
 
 ---
 
 ## Aperçu du projet
 
-Bankly V2 est un outil bancaire interne permettant de :  
+Bankly V2 est un outil bancaire interne permettant de :
 
 - Gérer les clients  
 - Créer et gérer les comptes bancaires  
@@ -29,7 +29,7 @@ Bankly V2 est un outil bancaire interne permettant de :
 - Consulter l’historique des transactions  
 - Accéder au système de manière sécurisée via l’authentification  
 
-Le projet privilégie une interface fonctionnelle et claire, avec de bonnes pratiques en conception de base de données, PHP et validation des données.
+Le projet privilégie une interface fonctionnelle et claire, en respectant les bonnes pratiques de conception de bases de données, PHP et validation des données.
 
 ---
 
@@ -56,19 +56,19 @@ Le projet privilégie une interface fonctionnelle et claire, avec de bonnes prat
 
 ## ERD & Base de données
 
-**Entités principales :**
+### Entités principales
 
 - **Utilisateur** : id, nom, email, mot de passe, rôle  
 - **Client** : id, nom, email, CIN  
 - **Compte** : id, client_id, type, solde, statut  
 - **Transaction** : id, account_id, montant, type (dépôt/retrait), date  
 
-**Relations :**
+### Relations
 
 - Un **Client** peut avoir plusieurs **Comptes** (1:N)  
 - Un **Compte** peut avoir plusieurs **Transactions** (1:N)  
 
-Toutes les tables incluent les contraintes **PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL** pour garantir l’intégrité des données.
+Toutes les tables incluent les contraintes **PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL** afin de garantir l’intégrité des données.
 
 ---
 
@@ -80,12 +80,6 @@ git clone git@github.com:MOEUAED/Bankly-full-project.git
 ```
 
 2. Configurer la connexion à la base dans config.php :
-```
-$host = "localhost";
-$db = "bankly_v2";
-$user = "root";
-$pass = "";
-```
 
 3. Lancer le projet sur un serveur PHP local .
 
@@ -98,24 +92,37 @@ $pass = "";
 
 ## Utilisation
 
+Après une authentification réussie, l’utilisateur est redirigé vers le **Dashboard** :  
+`dashboard/dashboard.php`
 
-- Une fois connecté, vous serez redirigé vers le **dashboard** :  
-`dashboard.php`
+Le dashboard affiche un résumé global (nombre de clients, comptes bancaires et transactions).
 
-- Gestion des clients :  
-- Liste : `clients/list_clients.php`  
-- Ajouter : `clients/add_client.php`  
-- Modifier : `clients/edit_client.php`  
+### Gestion des clients
+- Consulter la liste des clients :  
+  `clients/list_clients.php`
+- Ajouter un nouveau client :  
+  `clients/add_client.php`
+- Modifier les informations d’un client :  
+  `clients/edit_client.php`
+- Supprimer un client :  
+  `clients/delete_client.php`
 
-- Gestion des comptes :  
-- Liste : `accounts/list_accounts.php`  
-- Ajouter : `accounts/add_account.php`  
-- Modifier : `accounts/edit_account.php`  
-- Supprimer : `accounts/delete_account.php`
+### Gestion des comptes bancaires
+- Consulter la liste des comptes :  
+  `accounts/list_accounts.php`
+- Créer un compte bancaire pour un client :  
+  `accounts/add_account.php`
+- Modifier un compte bancaire :  
+  `accounts/edit_account.php`
+- Supprimer un compte bancaire :  
+  `accounts/delete_account.php`
 
-- Transactions :  
-- Effectuer un dépôt/retrait : `transactions/make_transaction.php`  
-- Historique : `transactions/list_transactions.php`
+### Gestion des transactions
+- Effectuer une transaction (dépôt ou retrait) :  
+  `transactions/make_transaction.php`
+- Consulter l’historique des transactions (filtré par compte) :  
+  `transactions/list_transactions.php`
+
 
 ---
 
@@ -124,28 +131,50 @@ $pass = "";
 ```
 Bankly-full-project/
 │
-├── assets/ # CSS, JS, images
-├── config.php # Connexion à la base de données
-├── login.php # Authentification
-├── logout.php # Déconnexion
-├── dashboard.php # Statistiques
+├── 📁 config/
+│   └── database.php          # Connexion à la base de donnees (mysqli)
 │
-├── clients/
-│ ├── list_clients.php
-│ ├── add_client.php
-│ ├── edit_client.php
+├── 📁 auth/
+│   ├── login.php             # Traitement du login
+│   ├── signup.php            # Formulaire de enregistration
+│   ├── signup_process.php    # Traitement du signup
+│   └── logout.php            # Deconnexion (destroy session)
 │
-├── accounts/
-│ ├── list_accounts.php
-│ ├── add_account.php
-│ ├── edit_account.php
-│ ├── delete_account.php
+├── 📁 dashboard/
+│   └── dashboard.php         # Dashboard avec statistiques
 │
-├── transactions/
-│ ├── make_transaction.php
-│ ├── list_transactions.php
+├── 📁 clients/
+│   ├── list_clients.php      # Liste des clients
+│   ├── add_client.php        # Ajouter un client
+│   ├── edit_client.php       # Modifier un client
+│   └── delete_client.php     # Supprimer un client
 │
-└── README.md
+├── 📁 accounts/
+│   ├── list_accounts.php     # Liste des comptes
+│   ├── add_account.php       # Creer un compte
+│   ├── edit_account.php      # Modifier un compte
+│   └── delete_account.php    # Supprimer un compte
+│
+├── 📁 transactions/
+│   ├── make_transaction.php  # Depot / Retrait
+│   └── list_transactions.php # Historique des transactions
+│
+├── 📁 assets/
+│   ├── 📁 css/
+│   │   ├── input.css         # Fichier source Tailwind
+│   │   ├── output.css        # CSS compile (Tailwind)
+│   │   └── style.css         # Styles CSS personnalisés
+│   ├── 📁 img/               # Icones et images du site
+│   └── 📁 js/
+│       └── script.js         # JavaScript 
+│
+├── 📁 sql/
+│   └── bankly_v2.sql         # Base de donnees SQL finale
+│
+├── package.json              # Configuration npm / Tailwind
+├── package-lock.json
+├── README.md                 # Documentation du projet
+└── index.php                 # Page de connexion
 
 ```
 
@@ -174,4 +203,4 @@ Bankly-full-project/
 ## Auteur
 
 **Mouad Ziyani**  
-Projet : *Bankly V2*  
+Projet académique : *Bankly V2*
