@@ -11,7 +11,7 @@
 
 <div class="w-full max-w-sm bg-[#1a1a1a] rounded-xl p-8 shadow-xl shadow-black/40">
     <h2 class="text-2xl font-bold text-center text-white mb-6">Create Your Account</h2>
-    <form action="signup.php" method="POST" class="space-y-5">
+    <form action="signup_process.php" method="POST" class="space-y-5">
         <div class="flex flex-col">
             <label for="full_name" class="text-sm font-medium text-gray-300 mb-1">Full Name</label>
             <input type="text" id="full_name" name="full_name_s"

@@ -1,5 +1,5 @@
 <?php
-require_once "config.php";
+require_once "../config/config.php";
 session_start();
 
 if (isset($_POST['submit_s'])) {
@@ -28,7 +28,7 @@ if (isset($_POST['submit_s'])) {
     mysqli_stmt_bind_param($stmt, "ssss", $full_name, $email, $password_hashed, $role);
     mysqli_stmt_execute($stmt);
 
-    header("Location: login.php");
+    header("Location: ../index.php");
     exit;
 }
 ?>
