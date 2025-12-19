@@ -1,3 +1,59 @@
+<?php
+session_start();
+require_once "../config.php";
+
+if (!isset($_GET['id'])) {
+    header("Location: list_accounts.php");
+    exit;
+}
+
+$id = (int)$_GET['id'];
+
+$stmt = mysqli_prepare($connect, "SELECT * FROM accounts WHERE account_id = ?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$account = mysqli_fetch_assoc($result);
+
+if (!$account) {
+    header("Location: list_accounts.php");
+    exit;
+}
+
+$customers = mysqli_query($connect, "SELECT customer_id, full_name FROM customers");
+
+if (isset($_POST['submit'])) {
+    $account_number = trim($_POST['account_number']);
+    $account_type   = $_POST['account_type'];
+    $balance        = (float)$_POST['balance'];
+    $customerid     = (int)$_POST['customerid'];
+
+    $stmt = mysqli_prepare(
+        $connect,
+        "UPDATE accounts 
+         SET account_number = ?, balance = ?, account_type = ?, customerid = ?
+         WHERE account_id = ?"
+    );
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "sdsii",
+        $account_number,
+        $balance,
+        $account_type,
+        $customerid,
+        $id
+    );
+
+    if (mysqli_stmt_execute($stmt)) {
+        header("Location: list_accounts.php?msg=updated");
+        exit;
+    } else {
+        $error = mysqli_error($connect);
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
