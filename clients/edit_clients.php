@@ -1,3 +1,66 @@
+<?php
+session_start();
+require_once "../config.php";
+
+$error = '';
+
+if (!isset($_GET['id'])) {
+    header("Location: list_clients.php");
+    exit;
+}
+
+$id = (int)$_GET['id'];
+
+$stmt = mysqli_prepare($connect, "SELECT * FROM customers WHERE customer_id = ?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+$client = mysqli_fetch_assoc($result);
+
+if (!$client) {
+    header("Location: list_clients.php");
+    exit;
+}
+
+if (isset($_POST['submit'])) {
+
+    $full_name = trim($_POST['full_name']);
+    $email     = trim($_POST['email']);
+    $phone     = trim($_POST['phone']);
+
+    if (empty($full_name) || empty($email)) {
+        $error = "Full name and email are required.";
+    } else {
+
+        $stmt = mysqli_prepare(
+            $connect,
+            "SELECT customer_id FROM customers WHERE email = ? AND customer_id != ?"
+        );
+        mysqli_stmt_bind_param($stmt, "si", $email, $id);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+
+        if (mysqli_num_rows($res) > 0) {
+            $error = "This email is already used by another client.";
+        } else {
+
+            $stmt = mysqli_prepare(
+                $connect,
+                "UPDATE customers SET full_name = ?, email = ?, phone = ? WHERE customer_id = ?"
+            );
+            mysqli_stmt_bind_param($stmt, "sssi", $full_name, $email, $phone, $id);
+
+            if (mysqli_stmt_execute($stmt)) {
+                header("Location: list_clients.php?msg=updated");
+                exit;
+            } else {
+                $error = "Update failed.";
+            }
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
