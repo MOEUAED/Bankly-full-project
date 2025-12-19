@@ -26,13 +26,13 @@
         </div>
         <div class="flex flex-col">
             <label for="password" class="text-sm font-medium text-gray-300 mb-1">Password</label>
-            <input type="password" id="password" name="password_s"
+            <input type="password" id="password" name="password_s" minlength="6"
                    class="px-4 py-2 rounded-lg bg-[#2a2a2a] text-white border border-[#3d3d3d] focus:border-red-500 outline-none transition"
                    required>
         </div>
         <div class="flex flex-col">
             <label for="r_password" class="text-sm font-medium text-gray-300 mb-1">Repeat Password</label>
-            <input type="password" id="r_password" name="r_password"
+            <input type="password" id="r_password" name="r_password" minlength="6"
                    class="px-4 py-2 rounded-lg bg-[#2a2a2a] text-white border border-[#3d3d3d] focus:border-red-500 outline-none transition"
                    required>
         </div>
