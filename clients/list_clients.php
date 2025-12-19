@@ -1,3 +1,46 @@
+<?php
+session_start();
+require_once "../config.php";
+
+$error = '';
+
+if (isset($_POST['submit'])) {
+
+    $full_name = trim($_POST['full_name']);
+    $email     = trim($_POST['email']);
+    $phone     = trim($_POST['phone']);
+
+    if (empty($full_name) || empty($email)) {
+        $error = "Full name and email are required.";
+    } else {
+
+        $stmt = mysqli_prepare($connect, "SELECT customer_id FROM customers WHERE email = ?");
+        mysqli_stmt_bind_param($stmt, "s", $email);
+        mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
+
+        if (mysqli_num_rows($res) > 0) {
+            $error = "This email already exists.";
+        } else {
+
+            $stmt = mysqli_prepare(
+                $connect,
+                "INSERT INTO customers (full_name, email, phone) VALUES (?, ?, ?)"
+            );
+            mysqli_stmt_bind_param($stmt, "sss", $full_name, $email, $phone);
+
+            if (mysqli_stmt_execute($stmt)) {
+                header("Location: list_clients.php?msg=added");
+                exit;
+            } else {
+                $error = "Error while adding client.";
+            }
+        }
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
