@@ -132,7 +132,7 @@ Le dashboard affiche un résumé global (nombre de clients, comptes bancaires et
 Bankly-full-project/
 │
 ├── 📁 config/
-│   └── database.php          # Connexion à la base de donnees (mysqli)
+│   └── config.php          # Connexion à la base de donnees (mysqli)
 │
 ├── 📁 auth/
 │   ├── login.php             # Traitement du login
