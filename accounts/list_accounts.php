@@ -1,3 +1,24 @@
+<?php
+session_start();
+require_once "../config.php";
+
+$query = "
+    SELECT 
+        accounts.account_id,
+        accounts.account_number,
+        accounts.balance,
+        accounts.account_type,
+        customers.full_name AS customer_name
+    FROM accounts
+    JOIN customers ON accounts.customerid = customers.customer_id
+    ORDER BY accounts.account_id DESC
+";
+
+$stmt = mysqli_prepare($connect, $query);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
