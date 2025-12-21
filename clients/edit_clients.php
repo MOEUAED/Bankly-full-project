@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../config.php";
+require_once "../config/config.php";
 
 $error = '';
 
@@ -11,7 +11,10 @@ if (!isset($_GET['id'])) {
 
 $id = (int)$_GET['id'];
 
-$stmt = mysqli_prepare($connect, "SELECT * FROM customers WHERE customer_id = ?");
+$stmt = mysqli_prepare(
+    $connect,
+    "SELECT client_id, full_name, email, cin FROM clients WHERE client_id = ?"
+);
 mysqli_stmt_bind_param($stmt, "i", $id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -26,15 +29,15 @@ if (isset($_POST['submit'])) {
 
     $full_name = trim($_POST['full_name']);
     $email     = trim($_POST['email']);
-    $phone     = trim($_POST['phone']);
+    $cin       = trim($_POST['cin']);
 
-    if (empty($full_name) || empty($email)) {
-        $error = "Full name and email are required.";
+    if (empty($full_name) || empty($email) || empty($cin)) {
+        $error = "All fields are required.";
     } else {
 
         $stmt = mysqli_prepare(
             $connect,
-            "SELECT customer_id FROM customers WHERE email = ? AND customer_id != ?"
+            "SELECT client_id FROM clients WHERE email = ? AND client_id != ?"
         );
         mysqli_stmt_bind_param($stmt, "si", $email, $id);
         mysqli_stmt_execute($stmt);
@@ -46,9 +49,9 @@ if (isset($_POST['submit'])) {
 
             $stmt = mysqli_prepare(
                 $connect,
-                "UPDATE customers SET full_name = ?, email = ?, phone = ? WHERE customer_id = ?"
+                "UPDATE clients SET full_name = ?, email = ?, cin = ? WHERE client_id = ?"
             );
-            mysqli_stmt_bind_param($stmt, "sssi", $full_name, $email, $phone, $id);
+            mysqli_stmt_bind_param($stmt, "sssi", $full_name, $email, $cin, $id);
 
             if (mysqli_stmt_execute($stmt)) {
                 header("Location: list_clients.php?msg=updated");
@@ -109,11 +112,12 @@ if (isset($_POST['submit'])) {
         </div>
 
         <div class="mb-6">
-            <label class="block mb-2 text-gray-400">Phone</label>
-            <input type="text" name="phone"
-                   value="<?php echo htmlspecialchars($client['phone']); ?>"
-                   class="w-full bg-[#0e0e0e] border border-[#242424] rounded px-4 py-2">
+            <label class="block mb-2 text-gray-400">CIN</label>
+            <input type="text" name="cin" required
+                value="<?php echo htmlspecialchars($client['cin']); ?>"
+                class="w-full bg-[#0e0e0e] border border-[#242424] rounded px-4 py-2">
         </div>
+
 
         <button type="submit" name="submit"
                 class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold">

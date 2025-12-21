@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../config.php";
+require_once "../config/config.php";
 
 $error = '';
 
@@ -8,26 +8,29 @@ if (isset($_POST['submit'])) {
 
     $full_name = trim($_POST['full_name']);
     $email     = trim($_POST['email']);
-    $phone     = trim($_POST['phone']);
+    $cin       = trim($_POST['cin']);
 
-    if (empty($full_name) || empty($email)) {
-        $error = "Full name and email are required.";
+    if (empty($full_name) || empty($email) || empty($cin)) {
+        $error = "All fields are required.";
     } else {
 
-        $stmt = mysqli_prepare($connect, "SELECT customer_id FROM customers WHERE email = ?");
-        mysqli_stmt_bind_param($stmt, "s", $email);
+        $stmt = mysqli_prepare(
+            $connect,
+            "SELECT client_id FROM clients WHERE email = ? OR cin = ?"
+        );
+        mysqli_stmt_bind_param($stmt, "ss", $email, $cin);
         mysqli_stmt_execute($stmt);
         $res = mysqli_stmt_get_result($stmt);
 
         if (mysqli_num_rows($res) > 0) {
-            $error = "This email already exists.";
+            $error = "Email or CIN already exists.";
         } else {
 
             $stmt = mysqli_prepare(
                 $connect,
-                "INSERT INTO customers (full_name, email, phone) VALUES (?, ?, ?)"
+                "INSERT INTO clients (full_name, email, cin) VALUES (?, ?, ?)"
             );
-            mysqli_stmt_bind_param($stmt, "sss", $full_name, $email, $phone);
+            mysqli_stmt_bind_param($stmt, "sss", $full_name, $email, $cin);
 
             if (mysqli_stmt_execute($stmt)) {
                 header("Location: list_clients.php?msg=added");
@@ -39,7 +42,6 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -86,11 +88,12 @@ if (isset($_POST['submit'])) {
                    class="w-full bg-[#0e0e0e] border border-[#242424] rounded px-4 py-2">
         </div>
 
-        <div class="mb-6">
-            <label class="block mb-2 text-gray-400">Phone (optional)</label>
-            <input type="text" name="phone"
-                   class="w-full bg-[#0e0e0e] border border-[#242424] rounded px-4 py-2">
+        <div class="mb-4">
+            <label class="block mb-2 text-gray-400">CIN</label>
+            <input type="text" name="cin" required
+                class="w-full bg-[#0e0e0e] border border-[#242424] rounded px-4 py-2">
         </div>
+
 
         <button type="submit" name="submit"
                 class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-lg font-semibold">

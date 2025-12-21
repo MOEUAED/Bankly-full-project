@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../config.php";
+require_once "../config/config.php";
 
 if (!isset($_GET['id'])) {
     header("Location: list_clients.php");
@@ -11,7 +11,7 @@ $id = (int)$_GET['id'];
 
 $stmt = mysqli_prepare(
     $connect,
-    "SELECT account_id FROM accounts WHERE customerid = ? LIMIT 1"
+    "SELECT account_id FROM comptes WHERE client_id = ? LIMIT 1"
 );
 mysqli_stmt_bind_param($stmt, "i", $id);
 mysqli_stmt_execute($stmt);
@@ -22,7 +22,7 @@ if (mysqli_num_rows($res) > 0) {
     exit;
 }
 
-$stmt = mysqli_prepare($connect, "DELETE FROM customers WHERE customer_id = ?");
+$stmt = mysqli_prepare($connect, "DELETE FROM clients WHERE client_id = ?");
 mysqli_stmt_bind_param($stmt, "i", $id);
 
 if (mysqli_stmt_execute($stmt)) {

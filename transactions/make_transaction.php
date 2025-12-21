@@ -1,19 +1,17 @@
 <?php
 session_start();
-require_once "../config.php";
+require_once "../config/config.php";
 
 $error = '';
 $success = '';
 
-// Fetch all accounts with customer names
 $accounts = mysqli_query($connect, "
     SELECT a.account_id, a.account_number, c.full_name 
-    FROM accounts a
-    JOIN customers c ON a.customerid = c.customer_id
+    FROM comptes a
+    JOIN clients c ON a.client_id = c.client_id
     ORDER BY c.full_name ASC
 ");
 
-// Handle form submission
 if (isset($_POST['submit'])) {
     $account_id = (int)$_POST['account_id'];
     $type       = $_POST['transaction_type'];
@@ -22,8 +20,7 @@ if (isset($_POST['submit'])) {
     if ($account_id <= 0 || $amount <= 0 || !in_array($type, ['credit', 'debit'])) {
         $error = "Please fill all fields correctly.";
     } else {
-        // Check account exists
-        $stmt = mysqli_prepare($connect, "SELECT balance FROM accounts WHERE account_id = ?");
+        $stmt = mysqli_prepare($connect, "SELECT balance FROM comptes WHERE account_id = ?");
         mysqli_stmt_bind_param($stmt, "i", $account_id);
         mysqli_stmt_execute($stmt);
         $res = mysqli_stmt_get_result($stmt);
@@ -44,7 +41,6 @@ if (isset($_POST['submit'])) {
             }
 
             if (empty($error)) {
-                // Insert transaction
                 $stmt = mysqli_prepare($connect, "
                     INSERT INTO transactions (account_id, transaction_type, amount, transaction_date)
                     VALUES (?, ?, ?, NOW())
@@ -52,8 +48,7 @@ if (isset($_POST['submit'])) {
                 mysqli_stmt_bind_param($stmt, "isd", $account_id, $type, $amount);
 
                 if (mysqli_stmt_execute($stmt)) {
-                    // Update account balance
-                    $stmt_upd = mysqli_prepare($connect, "UPDATE accounts SET balance = ? WHERE account_id = ?");
+                    $stmt_upd = mysqli_prepare($connect, "UPDATE comptes SET balance = ? WHERE account_id = ?");
                     mysqli_stmt_bind_param($stmt_upd, "di", $new_balance, $account_id);
                     mysqli_stmt_execute($stmt_upd);
 
@@ -80,11 +75,11 @@ if (isset($_POST['submit'])) {
 <aside class="w-64 bg-[#161616] h-screen p-6 fixed border-r border-[#242424]">
     <h1 class="text-2xl font-bold text-red-600 mb-10">Bankly</h1>
     <nav class="space-y-4">
-        <a href="../dashboard.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Dashboard</a>
+        <a href="../dashboard/dashboard.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Dashboard</a>
         <a href="../clients/list_clients.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Customers</a>
         <a href="../accounts/list_accounts.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Accounts</a>
         <a href="list_transactions.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Transactions</a>
-        <a href="../logout.php" class="block px-3 py-2 rounded-lg text-red-500 hover:bg-[#1f1f1f]">Logout</a>
+        <a href="../auth/logout.php" class="block px-3 py-2 rounded-lg text-red-500 hover:bg-[#1f1f1f]">Logout</a>
     </nav>
 </aside>
 

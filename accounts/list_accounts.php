@@ -1,23 +1,24 @@
 <?php
 session_start();
-require_once "../config.php";
+require_once "../config/config.php";
 
 $query = "
     SELECT 
-        accounts.account_id,
-        accounts.account_number,
-        accounts.balance,
-        accounts.account_type,
-        customers.full_name AS customer_name
-    FROM accounts
-    JOIN customers ON accounts.customerid = customers.customer_id
-    ORDER BY accounts.account_id DESC
+        comptes.account_id,
+        comptes.account_number,
+        comptes.balance,
+        comptes.account_type,
+        clients.full_name AS client_name
+    FROM comptes
+    JOIN clients ON comptes.client_id = clients.client_id
+    ORDER BY comptes.account_id DESC
 ";
 
 $stmt = mysqli_prepare($connect, $query);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,10 +34,10 @@ $result = mysqli_stmt_get_result($stmt);
 <aside class="w-64 bg-[#161616] h-screen p-6 fixed border-r border-[#242424]">
     <h1 class="text-2xl font-bold text-red-600 mb-10">Bankly</h1>
     <nav class="space-y-4">
-        <a href="../dashboard.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Dashboard</a>
+        <a href="../dashboard/dashboard.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Dashboard</a>
         <a href="../clients/list_clients.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Customers</a>
         <a href="list_accounts.php" class="block px-3 py-2 rounded-lg bg-red-600/20 text-red-500 font-semibold">Accounts</a>
-        <a href="../logout.php" class="block px-3 py-2 rounded-lg text-red-500 hover:bg-[#1f1f1f]">Logout</a>
+        <a href="../auth/logout.php" class="block px-3 py-2 rounded-lg text-red-500 hover:bg-[#1f1f1f]">Logout</a>
     </nav>
 </aside>
 
@@ -50,7 +51,7 @@ $result = mysqli_stmt_get_result($stmt);
     </div>
 
     <div class="mb-6">
-        <a href="add_account.php"
+        <a href="add_accounts.php"
            class="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-lg font-semibold">
             + Add Account
         </a>
@@ -77,16 +78,16 @@ $result = mysqli_stmt_get_result($stmt);
                     <tr class="border-b border-[#242424] hover:bg-[#222222] transition">
                         <td class="py-3"><?php echo $row['account_id']; ?></td>
                         <td><?php echo htmlspecialchars($row['account_number']); ?></td>
-                        <td><?php echo htmlspecialchars($row['customer_name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['client_name']); ?></td>
                         <td><?php echo htmlspecialchars($row['account_type']); ?></td>
                         <td class="font-semibold">
                             <?php echo number_format($row['balance'], 2); ?> MAD
                         </td>
                         <td class="flex gap-3 py-3">
-                            <a href="edit_account.php?id=<?php echo (int)$row['account_id']; ?>"
+                            <a href="edit_accounts.php?id=<?php echo (int)$row['account_id']; ?>"
                                class="text-blue-400 hover:underline">Edit</a>
 
-                            <a href="delete_account.php?id=<?php echo (int)$row['account_id']; ?>"
+                            <a href="delete_accounts.php?id=<?php echo (int)$row['account_id']; ?>"
                                onclick="return confirm('Delete this account?')"
                                class="text-red-500 hover:underline">Delete</a>
                         </td>
