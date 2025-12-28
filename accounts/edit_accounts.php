@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
         <a href="../dashboard.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Dashboard</a>
         <a href="../clients/list_clients.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Customers</a>
         <a href="list_accounts.php" class="block px-3 py-2 rounded-lg bg-red-600/20 text-red-500 font-semibold">Accounts</a>
-        <a href="../logout.php" class="block px-3 py-2 rounded-lg text-red-500 hover:bg-[#1f1f1f]">Logout</a>
+        <a href="../auth/logout.php" class="block px-3 py-2 rounded-lg text-red-500 hover:bg-[#1f1f1f]">Logout</a>
     </nav>
 </aside>
 <main class="ml-64 p-8 w-full">
