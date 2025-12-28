@@ -49,7 +49,7 @@ $transactions = mysqli_query($connect, "
         <a href="../clients/list_clients.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Customers</a>
         <a href="../accounts/list_accounts.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Accounts</a>
         <a href="../transactions/list_transactions.php" class="block px-3 py-2 rounded-lg hover:bg-[#1f1f1f]">Transactions</a>
-        <a href="logout.php" class="block px-3 py-2 rounded-lg text-red-500 hover:bg-[#1f1f1f]">Logout</a>
+        <a href="../auth/logout.php" class="block px-3 py-2 rounded-lg text-red-500 hover:bg-[#1f1f1f]">Logout</a>
     </nav>
 </aside>
 

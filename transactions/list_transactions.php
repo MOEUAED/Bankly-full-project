@@ -2,6 +2,9 @@
 session_start();
 require_once "../config/config.php";
 
+$userName = $_SESSION['user_name'];
+$initial  = strtoupper(substr($userName, 0, 1));
+
 $query = "
     SELECT 
         t.transaction_id,
@@ -47,7 +50,12 @@ $result = mysqli_stmt_get_result($stmt);
 <main class="ml-64 p-8 w-full">
     <div class="flex justify-between items-center mb-8">
         <h2 class="text-3xl font-bold">Transactions</h2>
-        <span class="text-gray-300"><?php echo htmlspecialchars($_SESSION['user_name']); ?></span>
+        <div class="flex items-center gap-3 bg-[#1a1a1a] px-4 py-2 rounded-lg">
+            <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center font-bold">
+                <?php echo $initial; ?>
+            </div>
+            <span class="text-gray-300"><?php echo htmlspecialchars($userName); ?></span>
+        </div>
     </div>
 
     <div class="mb-6">
